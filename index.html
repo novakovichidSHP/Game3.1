@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="windows-1251">
+    <title>Пятнашки 3х3</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+<div class="parent">
+    <div class="child1">
+        <div class="titleAndButton">
+            <h1>Чиним аттракцион <br> "Американские горки"</h1>
+            <button id="game" class="game">Новая игра</button>
+            <div id="result" class="result">
+                Ходы: <span class="move-text"></span>
+            </div>
+        </div>
+
+        <!-- Блок результатов -->
+        
+
+        <!-- Блок выбора сложнсти -->
+        <!-- <div id="difficulty" class="difficulty">
+            Select difficulty:
+            <br>
+            <input type="radio" name="game-difficulty" id="game-difficulty-one" value='3' checked>
+            <label for="game-difficulty-one">3x3 (classic)</label>
+            <br>
+            <input type="radio" name="game-difficulty" id="game-difficulty-two" value='4'>
+            <label for="game-difficulty-two">4x4</label>
+            <br>
+            <input type="radio" name="game-difficulty" id="game-difficulty-three" value='5'>
+            <label for="game-difficulty-three">6x6</label>
+        </div> -->
+    </div>
+    <div class="child2">
+        <!-- Игра -->
+        <div class="field" id="field"></div>
+    </div>
+</div>
+
+</body>
+</html>

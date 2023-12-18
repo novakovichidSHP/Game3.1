@@ -1,0 +1,95 @@
+.parent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.field {
+    width: 400px;
+    height: 400px;
+    border-radius: 5px;
+    position: relative;
+    display: none;
+    /* margin-left: 20px; */
+    /* margin-left: 300px; */
+}
+
+.cell {
+    box-sizing: border-box;
+    color: rgb(255, 255, 255);
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    width: 100px;
+    height: 100px;
+    font-weight: bold;
+    border: 2px solid #656462;
+    border-radius: 10px;
+    position: absolute;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    background-image: url('img/gear-wheel.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.child1 {
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    align-content: center;
+    vertical-align: top;
+    width: 400px;
+    margin-bottom: 20px;
+}
+
+.child2 {
+    display: inline-block;
+}
+
+.titleAndButton {
+    text-align: center;
+    vertical-align: top;
+}
+
+.result {
+    display: none;
+    font-family: "Arial";
+    font-size: 13pt;
+    margin-top: 5px;
+}
+
+/* .difficulty {
+    text-align: left;
+    font-family: "Arial";
+    font-size: 13pt;
+} */
+
+
+.game {
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    padding: .8em 1em calc(.8em + 3px);
+    border-radius: 3px;
+    background: rgb(64, 199, 129);
+    box-shadow: 0 -3px rgb(53, 167, 110) inset;
+    transition: 0.2s;
+}
+
+.game:hover {
+    background: rgb(53, 167, 110);
+}
+
+.game:active {
+    background: rgb(33, 147, 90);
+    box-shadow: 0 3px rgb(33, 147, 90) inset;
+}
+
+h1 {
+    font-family: "Arial Black";
+    font-size: 20px;
+
+}
