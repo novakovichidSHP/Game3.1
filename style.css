@@ -15,7 +15,7 @@
 
 .cell {
     box-sizing: border-box;
-    color: rgb(255, 255, 255);
+    color: rgb(64, 199, 129);
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
     width: 100px;
     height: 100px;
@@ -29,7 +29,7 @@
     align-items: center;
     transition: all 0.3s;
     cursor: pointer;
-    background-image: url('img/gear-wheel.png');
+    background-image: url('img/gear-wheel1.png');
     background-repeat: no-repeat;
     background-size: cover;
 }
