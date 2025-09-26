@@ -1,70 +1,151 @@
-/* Game3.1 / app.js — фиксированная решаемая стартовая позиция, без рандома */
-(() => {
-  const N = 4;
-  const START = [1,2,3,4, 5,6,7,8, 9,10,12,15, 13,14,0,11];
+//берем кнопку
+let newGameButton = document.getElementById('game');
 
-  const board = document.getElementById('board')
-             || document.querySelector('.board')
-             || document.querySelector('.game');
-  if (!board) { console.error('Не найден контейнер поля (#board/.board/.game)'); return; }
+//флаг для определения очередности нажатия кнопки
+let newButtonClicked = true;
 
-  let state = START.slice();
-  let won = false;
+//событие при клике на кнопку
+newGameButton.onclick = start;
 
-  const idx2rc = i => ({ r: Math.floor(i / N), c: i % N });
-  const rc2idx = (r, c) => r * N + c;
-  const isAdj = (i, j) => {
-    const A = idx2rc(i), B = idx2rc(j);
-    return Math.abs(A.r - B.r) + Math.abs(A.c - B.c) === 1;
-  };
+//счетчик шагов
+let moveCounter = 0;
+let gameTime = 0;
 
-  function render() {
-    board.innerHTML = '';
-    board.style.display = 'grid';
-    board.style.gridTemplateColumns = `repeat(${N}, 1fr)`;
-    board.style.gridTemplateRows    = `repeat(${N}, 1fr)`;
-    state.forEach((n, i) => {
-      const { r, c } = idx2rc(i);
-      const el = document.createElement('button');
-      el.className = n === 0 ? 'tile empty' : 'tile';
-      el.style.gridRow = String(r + 1);
-      el.style.gridColumn = String(c + 1);
-      el.dataset.i = i;
-      el.textContent = n === 0 ? '' : String(n);
-      el.addEventListener('click', () => tryMove(i));
-      board.appendChild(el);
-    });
-  }
-
-  function tryMove(i) {
-    if (won) return;
-    const blank = state.indexOf(0);
-    if (!isAdj(i, blank)) return;
-    [state[i], state[blank]] = [state[blank], state[i]];
-    render();
-    checkWin();
-  }
-
-  function checkWin() {
-    for (let i = 0; i < 15; i++) if (state[i] !== i + 1) return;
-    if (state[15] !== 0) return;
-    won = true;
-    board.classList.add('won');
-  }
-
-  document.addEventListener('keydown', (e) => {
-    const blank = state.indexOf(0);
-    const { r, c } = idx2rc(blank);
-    let target = null;
-    switch (e.key) {
-      case 'ArrowUp':    if (r < N - 1) target = rc2idx(r + 1, c); break;
-      case 'ArrowDown':  if (r > 0)     target = rc2idx(r - 1, c); break;
-      case 'ArrowLeft':  if (c < N - 1) target = rc2idx(r, c + 1); break;
-      case 'ArrowRight': if (c > 0)     target = rc2idx(r, c - 1); break;
-      default: return;
+//срабатывает при нажатии на кнопку новой игры
+function start() {
+    let dif = 4;
+    // let dif = document.querySelector('[name="game-difficulty"]:checked').value;
+    if (newButtonClicked) {
+        startGame(dif);
+        field.style.display = "block";
+        startResults();
+        newButtonClicked = false; //меняется значение флага
+        newGameButton.innerHTML = "Заново";
+        //difficulty.style.display = "none";
+        result.style.display = "block";
+        //window.location.reload();
+    } else {
+        window.location.reload(); //перезагрузит страницу
     }
-    if (target != null) { e.preventDefault(); tryMove(target); }
-  });
+}
 
-  render();
-})();
+function startGame(dif) {
+    //ищем field
+    const field = document.querySelector('.field');
+
+    //размер ячейки
+    const cellSize = 100;
+    //складываем инфу о ячейках в массив
+    const cells = [];
+    //создаем и сортируем массив с числами
+    // const numbers = [...Array(dif * dif - 1).keys()].sort(() => Math.random() - 0.5);
+    const numbers = [10, 8, 5, 1, 6, 0, 3, 7, 12, 9, 13, 14, 4, 11, 2]
+    for (let i = 0; i <= dif * dif - 2; i++) {
+        //создаем тег
+        const cell = document.createElement('div');
+        const value = numbers[i] + 1;
+        cell.className = 'cell';
+        //записываем в ячейку значение
+        cell.innerHTML = value;
+
+        //позиция в строке
+        const left = i % dif;
+        //позиция в столбце
+        const top = (i - left) / dif;
+
+        //записываем ячейку в массив
+        cells.push({
+            value: value,
+            left: left,
+            top: top,
+            element: cell
+        });
+
+        //сдвигаем координаты
+        cell.style.left = `${left * cellSize}px`;
+        cell.style.top = `${top * cellSize}px`;
+
+        //добавляем ячейку в поле field
+        field.append(cell);
+
+        //при обработчике события срабатывает функция
+        cell.addEventListener('click', () => {
+            move(i);
+        })
+    }
+
+    //координаты пустой ячейки
+    const empty = {
+        value: dif * dif,
+        top: dif - 1,
+        left: dif - 1,
+    }
+    //заносим пустую ячейку в массив
+    cells.push(empty);
+
+
+    function move(index) {
+        //достаем ячейку
+        const cell = cells[index];
+
+        //берем разницу по координате
+        const leftDiff = Math.abs(empty.left - cell.left);
+        const topDiff = Math.abs(empty.top - cell.top);
+
+        //если разница больше одного, то ячейка не является соседней
+        if (leftDiff + topDiff > 1) {
+            return;
+        }
+        moveCounter++;
+        //перемещаемся на прошлую ячейку
+        cell.element.style.left = `${empty.left * cellSize}px`;
+        cell.element.style.top = `${empty.top * cellSize}px`;
+
+        //координаты пустой клетки
+        const emptyLeft = empty.left;
+        const emptyTop = empty.top;
+
+        //записываем координаты текущей ячейки
+        empty.left = cell.left;
+        empty.top = cell.top;
+
+        //в ячейку передаем записанные значения
+        cell.left = emptyLeft;
+        cell.top = emptyTop;
+
+        //метод every проверяет условие для каждого элемента
+        const isFinished = cells.every(cell => {
+            //проверка на правильную координату
+            return cell.value === cell.top * dif + cell.left + 1;
+        });
+
+        if (isFinished) {
+            setTimeout(function(){
+                alert('Вы прошли игру за '+ moveCounter + ' шагов');
+                //window.location.reload();
+            }, 500)
+        }
+    }
+
+}
+
+//результаты
+function startResults() {
+    const moveContainer = document.querySelector('.move-text');
+    //const timeContainer = document.querySelector('.time-text');
+    moveContainer.innerHTML = '' + moveCounter;
+    // timeContainer.innerHTML = '' + gameTime;
+    //обновляем контейнер шагов
+    const movesUpdate = setInterval(
+        () => {
+            moveContainer.innerHTML = '' + moveCounter;
+        },
+        100);
+    //обновляем контейнер времени
+    // const gameInterval = setInterval(
+    //     () => {
+    //         timeContainer.innerHTML = '' + ++gameTime;
+    //     },
+    //     1000);
+}
+
